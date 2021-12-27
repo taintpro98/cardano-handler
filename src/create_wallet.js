@@ -1,4 +1,10 @@
-"use strict";
+// import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js"
+// import * as bip39 from "bip39";
+// import * as crypto from "crypto";
+// // import { connection } from "./constants";
+// (async () => {
+//     // create 12 word phrase
+//     var randomBytes = crypto.randomBytes(16);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,24 +41,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
-// import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js"
-var bip39 = require("bip39");
-var crypto = require("crypto");
-// import { connection } from "./constants";
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var randomBytes, mnemonic, seed;
+var _this = this;
+//     var mnemonic = bip39.entropyToMnemonic(randomBytes.toString('hex'))
+//     console.log("12 words: ", mnemonic);
+//     const seed = await bip39.mnemonicToSeedSync(mnemonic, "password");
+//     console.log(seed);
+//     // const keypair = Keypair.fromSeed(seed.slice(0, 32));
+//     // console.log("seed: ", seed);
+//     // console.log(`publicKey ${keypair.publicKey.toBase58()}`)
+//     // let airdropSignature = await connection.requestAirdrop(
+//     //     keypair.publicKey,
+//     //     LAMPORTS_PER_SOL * 0.1,
+//     // );
+//     // await connection.confirmTransaction(airdropSignature);
+// })()
+// const { Seed } = require('cardano-wallet-js');
+// // generate a recovery phrase of 15 words (default)
+// let recoveryPhrase = Seed.generateRecoveryPhrase();
+// console.log(recoveryPhrase);
+// let words = Seed.toMnemonicList(recoveryPhrase);
+// console.log(words);
+var _a = require('cardano-wallet-js'), Seed = _a.Seed, WalletServer = _a.WalletServer;
+var walletServer = WalletServer.init('https://cardano-testnet.blockfrost.io/api/v0');
+(function () { return __awaiter(_this, void 0, void 0, function () {
+    var information;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                randomBytes = crypto.randomBytes(16);
-                mnemonic = bip39.entropyToMnemonic(randomBytes.toString('hex'));
-                console.log("12 words: ", mnemonic);
-                return [4 /*yield*/, bip39.mnemonicToSeedSync(mnemonic, "password")];
+            case 0: return [4 /*yield*/, walletServer.getNetworkInformation()];
             case 1:
-                seed = _a.sent();
-                console.log(seed);
+                information = _a.sent();
+                console.log(information);
                 return [2 /*return*/];
         }
     });
 }); })();
+// let recoveryPhrase = Seed.generateRecoveryPhrase();
+// let mnemonic_sentence = Seed.toMnemonicList(recoveryPhrase);
+// let passphrase = 'tangocrypto';
+// let name = 'tangocrypto-wallet';
+// let wallet = await walletServer.createOrRestoreShelleyWallet(name, mnemonic_sentence, passphrase);
