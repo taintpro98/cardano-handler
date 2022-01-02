@@ -1,51 +1,50 @@
-// import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js"
-// import * as bip39 from "bip39";
-// import * as crypto from "crypto";
-// // import { connection } from "./constants";
-// (async () => {
-//     // create 12 word phrase
-//     var randomBytes = crypto.randomBytes(16);
+import { Seed, WalletServer, AddressWallet, ShelleyWallet } from 'cardano-wallet-js';
+import * as bip39 from "bip39";
+import * as crypto from "crypto";
 
-//     var mnemonic = bip39.entropyToMnemonic(randomBytes.toString('hex'))
-//     console.log("12 words: ", mnemonic);
+let walletServer: any;
 
-//     const seed = await bip39.mnemonicToSeedSync(mnemonic, "password");
-//     console.log(seed);
-//     // const keypair = Keypair.fromSeed(seed.slice(0, 32));
-//     // console.log("seed: ", seed);
-//     // console.log(`publicKey ${keypair.publicKey.toBase58()}`)
-//     // let airdropSignature = await connection.requestAirdrop(
-//     //     keypair.publicKey,
-//     //     LAMPORTS_PER_SOL * 0.1,
-//     // );
+async function createSequentialWallet(){
+    var randomBytes = crypto.randomBytes(20);
 
-//     // await connection.confirmTransaction(airdropSignature);
-// })()
+    var recoveryPhrase = bip39.entropyToMnemonic(randomBytes.toString('hex'))
+    console.log("15 words: ", recoveryPhrase);
 
-// const { Seed } = require('cardano-wallet-js');
-    
-// // generate a recovery phrase of 15 words (default)
-// let recoveryPhrase = Seed.generateRecoveryPhrase();
-// console.log(recoveryPhrase);
+    let mnemonic_sentence = Seed.toMnemonicList(recoveryPhrase);
+    console.log(mnemonic_sentence);
 
-// let words = Seed.toMnemonicList(recoveryPhrase);
-// console.log(words);
+    let passphrase = 'tangocrypto';
+    let name = 'tangocrypto-wallet';
 
-const { Seed, WalletServer } = require('cardano-wallet-js');
-let walletServer = WalletServer.init('https://cardano-testnet.blockfrost.io/api/v0');
+    let wallet = await walletServer.createOrRestoreShelleyWallet(name, mnemonic_sentence, passphrase);
+    console.log('success');
+}
+
+async function getAllSequentialWallets(){
+    let wallets = await walletServer.wallets();
+    console.log(wallets);
+}
 
 (async () => {
-    // let walletServer = await WalletServer.init('http://you.server.com');
-    let information = await walletServer.getNetworkInformation();
-    console.log(information);
+    walletServer = await WalletServer.init('http://localhost:8090/v2');
+
+    // createSequentialWallet();
+    getAllSequentialWallets();
+
+    // const rootKey = Seed.deriveRootKey(mnemonic_sentence);
+    // const accountKey = Seed.deriveAccountKey(rootKey);
+
+    // const stakePrvKey = accountKey
+    // // .derive(CARDANO_CHIMERIC) // chimeric
+    // .derive(0);
+
+    // const privateKey = stakePrvKey.to_raw_key();
+    // const publicKey = privateKey.to_public();
+
+    // console.log(privateKey);
+
+    // let keyPair= Seed.generateKeyPair();
+    // let policyVKey = keyPair.publicKey.to_bech32();
+    // let policySKey = keyPair.privateKey.to_bech32();
+    // console.log(policySKey);
 })()
-    
-
-
-// let recoveryPhrase = Seed.generateRecoveryPhrase();
-// let mnemonic_sentence = Seed.toMnemonicList(recoveryPhrase);
-// let passphrase = 'tangocrypto';
-// let name = 'tangocrypto-wallet';
-    
-// let wallet = await walletServer.createOrRestoreShelleyWallet(name, mnemonic_sentence, passphrase);
-

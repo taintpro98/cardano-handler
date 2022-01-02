@@ -1,29 +1,54 @@
-// var bip39 = require('bip39')
-// var cryptoo = require('crypto')
+// Please add this dependency using npm install node-fetch and npm install @types/node-fetch
+// import fetch, { Response } from 'node-fetch'; 
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+import axios from "axios";
+const cmd: any = require('node-cmd');
+import { Seed } from 'cardano-wallet-js';
+import * as bip39 from "bip39";
+import * as crypto from "crypto";
 
-// var randomBytes = cryptoo.randomBytes(16)
-// var mnemonic = bip39.entropyToMnemonic(randomBytes.toString('hex'))
-// var seed = bip39.mnemonicToSeed(mnemonic)
+async function createSharedWallet() {
+  var randomBytes = crypto.randomBytes(20);
 
-// console.log(mnemonic)
+  var recoveryPhrase = bip39.entropyToMnemonic(randomBytes.toString('hex'))
+  console.log("15 words: ", recoveryPhrase);
 
-// var bitcoin = require('bitcoinjs-lib') // npm i -S bitcoinjs-lib
+  let mnemonic_sentence = Seed.toMnemonicList(recoveryPhrase);
+  console.log('mnemonic_sentence', mnemonic_sentence);
+  
+  const resp = await axios.post(`http://localhost:8090/v2/shared-wallets`, {
+    name: "Alan's Wallet",
+    mnemonic_sentence: mnemonic_sentence,
+    passphrase: 'Secure Passphrase'
+  });
+  console.log(resp.data);
+}
 
-// var bitcoinNetwork = bitcoin.networks.bitcoin
-// var hdMaster = bitcoin.HDNodeFromSeedBuffer(seed, bitcoinNetwork) // seed from above
+async function getSequentialWalletById(walletId: string) {
+  try {
+    const resp = await axios.get(`http://localhost:8090/v2/wallets/${walletId}`);
+    console.log(resp.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-// var key1 = hdMaster.derivePath('m/0')
-// var key2 = hdMaster.derivePath('m/1')
+async function getAddresses(walletId: string) {
+  try {
+    const resp = await axios.get(`http://localhost:8090/v2/wallets/${walletId}/addresses`);
+    console.log(resp.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-// console.log(key1.keyPair.toWIF())
-// console.log(key2.keyPair.toWIF())
-import { mnemonicToEntropy } from 'bip39';
 
-const entropy = mnemonicToEntropy(
-  [ "test", "walk", "nut", "penalty", "hip", "pave", "soap", "entry", "language", "right", "filter", "choice" ].join(' ')
-);
+(async () => {
+  // createSharedWallet();
+  const walletId: string = "72402ddccf35fb40d4383b39cbee8023909f4a51";
 
-const rootKey = CardanoWasm.Bip32PrivateKey.from_bip39_entropy(
-  Buffer.from(entropy, 'hex'),
-  Buffer.from(''),
-);
+  createSharedWallet();
+  // getSequentialWalletById(walletId);
+})()
+
+
