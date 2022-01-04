@@ -4,7 +4,7 @@ import * as crypto from "crypto";
 
 let walletServer: any;
 
-async function createSequentialWallet(){
+async function createSequentialWallet() {
     var randomBytes = crypto.randomBytes(20);
 
     var recoveryPhrase = bip39.entropyToMnemonic(randomBytes.toString('hex'))
@@ -20,9 +20,11 @@ async function createSequentialWallet(){
     console.log('success');
 }
 
-async function getAllSequentialWallets(){
+async function getAllSequentialWallets() {
+    console.log('Start getAllSequentialWallets ... ');
     let wallets = await walletServer.wallets();
     console.log(wallets);
+    console.log(wallets.length);
 }
 
 (async () => {
@@ -30,7 +32,6 @@ async function getAllSequentialWallets(){
 
     // createSequentialWallet();
     getAllSequentialWallets();
-
     // const rootKey = Seed.deriveRootKey(mnemonic_sentence);
     // const accountKey = Seed.deriveAccountKey(rootKey);
 
