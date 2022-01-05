@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-wallet": "ts-node-dev --respawn --transpile-only src/create_wallet.ts",
     "get-balance": "ts-node-dev --respawn --transpile-only src/get_balance.ts",
+    "transfer-native-tokens": "ts-node-dev --respawn --transpile-only src/transfer_native_tokens.ts",
     "testts": "ts-node-dev --respawn --transpile-only src/test.ts"
   },
   "keywords": [],

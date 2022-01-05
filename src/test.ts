@@ -143,8 +143,9 @@ async function testAddress(walletId: string) {
   // const wallet: any = resp.data;
   // const balance: number = wallet.balance.total.quantity;
   // console.log(balance);
-  let wallets = await walletServer.wallets();
-  console.log(wallets[1]);
+  let wallet = await walletServer.getShelleyWallet(walletId);
+  let address = (await wallet.getAddresses())[0];
+  console.log(address);
 }
 
 async function UTxOStatistics(walletId: string) {
@@ -156,13 +157,8 @@ async function UTxOStatistics(walletId: string) {
   }
 }
 
-
 (async () => {
-  const poolId: string = "a9ec394d519fdc192707868c28f8285af37fe83c0c9ad4541ac9820f";
-  const policyId: string = "2aa9c1557fcf8e7caa049fa0911a8724a1cdaf8037fe0b431c6ac664";
-  const assetName: string = "50494759546f6b656e"; // PIGYToken
   let addresses: string[] = [BRUNO.addressId];
-
 
   testAddress(BRUNO.walletId);
   // fetchAsset(walletId, policyId, assetName);

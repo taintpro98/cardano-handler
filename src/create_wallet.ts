@@ -1,10 +1,10 @@
 import { Seed, WalletServer, AddressWallet, ShelleyWallet } from 'cardano-wallet-js';
 import * as bip39 from "bip39";
 import * as crypto from "crypto";
+import { BRUNO, IRENE } from "./constants";
 
-let walletServer: any;
-
-async function createSequentialWallet() {
+async function createSequentialWallet(passphrase: string, name: string) {
+    let walletServer = await WalletServer.init('http://localhost:8090/v2');
     var randomBytes = crypto.randomBytes(20);
 
     var recoveryPhrase = bip39.entropyToMnemonic(randomBytes.toString('hex'))
@@ -13,39 +13,47 @@ async function createSequentialWallet() {
     let mnemonic_sentence = Seed.toMnemonicList(recoveryPhrase);
     console.log(mnemonic_sentence);
 
-    let passphrase = 'tangocrypto';
-    let name = 'tangocrypto-wallet';
+    // let passphrase = 'tangocrypto';
+    // let name = 'tangocrypto-wallet';
 
     let wallet = await walletServer.createOrRestoreShelleyWallet(name, mnemonic_sentence, passphrase);
     console.log('success');
 }
 
 async function getAllSequentialWallets() {
+    let walletServer = await WalletServer.init('http://localhost:8090/v2');
     console.log('Start getAllSequentialWallets ... ');
     let wallets = await walletServer.wallets();
     console.log(wallets);
     console.log(wallets.length);
+    // return await wallets;
 }
 
+async function getWalletInfo(walletId: string){
+    let walletServer = await WalletServer.init('http://localhost:8090/v2');
+    let wallet = await walletServer.getShelleyWallet(walletId);
+    console.log(wallet);
+}
+
+async function removeWalletById(walletId: string){
+    let walletServer = await WalletServer.init('http://localhost:8090/v2');
+    let wallet = await walletServer.getShelleyWallet(walletId);
+    await wallet.delete();
+}
+
+async function removeWalletByIndex(index: number) {
+    let walletServer = await WalletServer.init('http://localhost:8090/v2');
+    let wallet = (await walletServer.wallets())[index];
+    await wallet.delete();
+}
+
+// async function updatePassPhrase(){
+//     wallet = await wallet.updatePassphrase(oldPassphrase, newPassphrase);
+
+// }
+
 (async () => {
-    walletServer = await WalletServer.init('http://localhost:8090/v2');
-
-    // createSequentialWallet();
-    getAllSequentialWallets();
-    // const rootKey = Seed.deriveRootKey(mnemonic_sentence);
-    // const accountKey = Seed.deriveAccountKey(rootKey);
-
-    // const stakePrvKey = accountKey
-    // // .derive(CARDANO_CHIMERIC) // chimeric
-    // .derive(0);
-
-    // const privateKey = stakePrvKey.to_raw_key();
-    // const publicKey = privateKey.to_public();
-
-    // console.log(privateKey);
-
-    // let keyPair= Seed.generateKeyPair();
-    // let policyVKey = keyPair.publicKey.to_bech32();
-    // let policySKey = keyPair.privateKey.to_bech32();
-    // console.log(policySKey);
+    getWalletInfo(IRENE.walletId);
+    // getAllSequentialWallets();
+    // removeWalletByIndex(3);
 })()
