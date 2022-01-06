@@ -17,6 +17,4 @@ async function getAssets(walletId: string) {
     let addresses: string[] = [BRUNO.addressId];
 
     getAssets(BRUNO.walletId);
-    // fetchAsset(walletId, policyId, assetName);
-    // getSequentialWalletById(walletId);
 })()

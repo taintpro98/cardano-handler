@@ -2,13 +2,6 @@ import { Seed, WalletServer, AddressWallet, ShelleyWallet } from 'cardano-wallet
 import { BRUNO, IRENE } from "./constants";
 import axios from "axios";
 
-async function getTransactions(sender: any) {
-    let walletServer = await WalletServer.init('http://localhost:8090/v2');
-    let wallet = await walletServer.getShelleyWallet(sender.walletId);
-    let transactions = await wallet.getTransactions();
-    console.log(transactions);
-}
-
 async function createTransaction(sender: any, receiver: any, amount: number){
     let walletServer = await WalletServer.init('http://localhost:8090/v2');
     let senderWallet = await walletServer.getShelleyWallet(sender.walletId);
@@ -48,6 +41,4 @@ async function createApiTransaction(sender: any, receiver: any, amount: number){
     let addresses: string[] = [BRUNO.addressId];
 
     createTransaction(BRUNO, IRENE, 1000000);
-    // fetchAsset(walletId, policyId, assetName);
-    // getSequentialWalletById(walletId);
 })()
