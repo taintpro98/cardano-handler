@@ -1,6 +1,4 @@
 # cardano-handler
-## How to run ?
-
 ### Install library
 
 ```bash
@@ -17,6 +15,7 @@ yarn dev
 
 ### Running
 ```bash
+# Run cardano node with docker
 NETWORK=testnet docker-compose up
 
 ```
